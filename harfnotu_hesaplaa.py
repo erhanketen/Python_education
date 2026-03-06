@@ -1,4 +1,7 @@
 from time import sleep
+from colorama import Fore , init
+init(autoreset=True)
+
 
 isim_liste = []
 harf_notu = []
@@ -56,6 +59,32 @@ def dosya_yaz(dosya_yazma_yolu):
                 file.write(i)
                 file.write("\n")
 
+def kalan_gecen(yol,yol2,yol3):
+
+    kalanlar = []
+    gecenler = []
+
+    with open(yol,"r+", encoding="utf-8") as file:
+        file = file.read()
+        file = file.split("\n")
+        for i in file:
+            if "FF" in i:
+                kalanlar.append(i)
+            elif i == "":
+                pass
+            else:
+                gecenler.append(i)
+
+    with open(yol2,"w", encoding = "utf-8" ) as file:
+        for i in kalanlar:
+            file.write(i)
+            file.write("\n\n")
+
+    with open(yol3,"w", encoding = "utf-8") as file:
+        for i in gecenler:
+            file.write(i)
+            file.write("\n\n")
+
 
 print("""
     ----------------------------------------
@@ -64,6 +93,7 @@ print("""
 
     ----------------------------------------
     """)
+
 while True:
     try:
         dosya_yolu = input("Hesaplanacak Dosyanın Yolunu Yazınız:")
@@ -74,15 +104,40 @@ while True:
         print("Yazılıyor...")
         dosya_yaz(dosya_yazma_yolu)
         sleep(1.5)
-        print("Dosyanız Hazır! Dosya Konumu : {}".format(dosya_yazma_yolu))
-        break
+        print(Fore.GREEN+"Dosyanız Hazır!\n"
+                         "Dosya Konumu : {}"
+              .format(dosya_yazma_yolu))
+        feedback = input("Geçenler ve Kalanları Ayrı İki Dosya Olarak İster Misiniz? (y/n):")
+        if feedback == "y" or "Y":
+            yol2 = input("Kalanlar Dosyasının Yazılacağı Yol:")
+            yol3 = input("Geçenler Dosyasının Yazılacağı Yol:")
+            print("Yazılıyor...")
+            kalan_gecen(dosya_yazma_yolu, yol2 , yol3)
+            sleep(1.5)
+            print(Fore.GREEN+"Dosyanız Hazır!\n"
+                             "Geçenler Dosyasının Konumu: {}\n"
+                             "Kalanlar Dosyasının Konumu: {}"
+                  .format(yol2,yol3))
+            break
+        else:
+            break
+
+
+
     except PermissionError:
-        print("Geçerli Bir Dosya Yolu Seçiniz Lütfen!")
+        print(Fore.RED +
+              "Geçerli Bir Dosya Yolu Seçiniz Lütfen!")
+        continue
+
+    except FileNotFoundError:
+        print(Fore.RED +
+              "Dosya Bulunamadı veya İçi Boş!")
         continue
 
 
 
 
-
-# C:\Users\KETENBTVICTUS\PycharmProjects\PythonProject\eğitim\notlar.txt   --> okunacak dosya
-# C:\Users\KETENBTVICTUS\PycharmProjects\PythonProject\eğitim\harf_notlar.txt  --> yazılacak dosya
+# C:\Users\KETENBTVICTUS\PycharmProjects\PythonProject\Python_education\txt dosyaları\notlar.txt   --> okunacak dosya
+# C:\Users\KETENBTVICTUS\PycharmProjects\PythonProject\Python_education\txt dosyaları\harf_notlar.txt  --> yazılacak dosya
+# C:\Users\KETENBTVICTUS\PycharmProjects\PythonProject\Python_education\txt dosyaları\kalanlar.txt  --> kalanlar dosya
+# C:\Users\KETENBTVICTUS\PycharmProjects\PythonProject\Python_education\txt dosyaları\gecenler.txt  --> gecenler dosya
