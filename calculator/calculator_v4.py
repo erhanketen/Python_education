@@ -54,28 +54,46 @@ def girdi_al():
 
 def calculate():
     girdi_al()
-    for i in girdiler_son:     # BURADA İÇ İÇE FONKSİYON EKLENMELİ.
-        try:
-            indx = girdiler_son.index(i)
-            if i == "sqrt":
-                girdiler_son[indx] = math.sqrt(girdiler_son[indx+1])
-                girdiler_son.pop(indx+1)
-            elif i == "cos":
-                girdiler_son[indx] = math.cos(girdiler_son[indx+1])
-                girdiler_son.pop(indx+1)
-            elif i == "sin":
-                girdiler_son[indx] = math.sin(girdiler_son[indx+1])
-                girdiler_son.pop(indx+1)
-            elif i == "sq":
-                girdiler_son[indx] = math.pow(girdiler_son[indx+1],2)
-                girdiler_son.pop(indx+1)
-            elif i == "log":
-                girdiler_son[indx] = math.log10(girdiler_son[indx+1])
-                girdiler_son.pop(indx+1)
-        except TypeError:
-            print(Fore.RED + "İç İçe Fonksiyon Kullanılamaz!")
-            return "error"
+    a = 0
+    while a < len(girdiler_son):
+        for i in girdiler_son:
+            try:
+                indx = girdiler_son.index(i)
+                if i == "sqrt":
+                    if girdiler_son[indx+1] in fonksiyonlar:
+                        pass
+                    else:
+                        girdiler_son[indx] = math.sqrt(girdiler_son[indx+1])
+                        girdiler_son.pop(indx+1)
+                elif i == "cos":
+                    if girdiler_son[indx+1] in fonksiyonlar:
+                        pass
+                    else:
+                        girdiler_son[indx] = math.cos(girdiler_son[indx+1])
+                        girdiler_son.pop(indx+1)
+                elif i == "sin":
+                    if girdiler_son[indx+1] in fonksiyonlar:
+                        pass
+                    else:
+                        girdiler_son[indx] = math.sin(girdiler_son[indx+1])
+                        girdiler_son.pop(indx+1)
+                elif i == "sq":
+                    if girdiler_son[indx+1] in fonksiyonlar:
+                        pass
+                    else:
+                        girdiler_son[indx] = math.pow(girdiler_son[indx+1],2)
+                        girdiler_son.pop(indx+1)
+                elif i == "log":
+                    if girdiler_son[indx+1] in fonksiyonlar:
+                        pass
+                    else:
+                        girdiler_son[indx] = math.log10(girdiler_son[indx+1])
+                        girdiler_son.pop(indx+1)
+            except TypeError:
+                print(Fore.RED + "Fonksiyondan Sonra Operatör Kullanılamaz!")
+                return "error"
 
+            a += 1
     for i in girdiler_son:
         try:
             indx = girdiler_son.index(i)
