@@ -1,3 +1,5 @@
+"""
+
 import math
 # FONKSİYON DENEMESİ
 liste = [12,"+",20,"sqrt","cos",0]
@@ -21,3 +23,36 @@ while a < len(liste):
                 print("cos çalıştı.",liste[indx])
 
     a += 1
+"""
+from functools import reduce
+
+deste = ([],[],[4,3],[])
+deste_1 = list()
+for i,j in deste:
+
+
+
+
+
+toplama = lambda a,b: a+b
+
+print(reduce(toplama,deste))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

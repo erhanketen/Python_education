@@ -62,38 +62,52 @@ def calculate():
                 if i == "sqrt":
                     if girdiler_son[indx+1] in fonksiyonlar:
                         pass
+                    elif not girdiler_son[indx+1] in (numbers or fonksiyonlar):
+                        raise SyntaxError
                     else:
                         girdiler_son[indx] = math.sqrt(girdiler_son[indx+1])
                         girdiler_son.pop(indx+1)
                 elif i == "cos":
                     if girdiler_son[indx+1] in fonksiyonlar:
                         pass
+                    elif not girdiler_son[indx+1] in (numbers or fonksiyonlar):
+                        raise SyntaxError
                     else:
                         girdiler_son[indx] = math.cos(girdiler_son[indx+1])
                         girdiler_son.pop(indx+1)
                 elif i == "sin":
                     if girdiler_son[indx+1] in fonksiyonlar:
                         pass
+                    elif not girdiler_son[indx+1] in (numbers or fonksiyonlar):
+                        raise SyntaxError
                     else:
                         girdiler_son[indx] = math.sin(girdiler_son[indx+1])
                         girdiler_son.pop(indx+1)
                 elif i == "sq":
                     if girdiler_son[indx+1] in fonksiyonlar:
                         pass
+                    elif not ((girdiler_son[indx+1] == int) or (girdiler_son[indx+1] in fonksiyonlar)):
+                        raise SyntaxError
                     else:
                         girdiler_son[indx] = math.pow(girdiler_son[indx+1],2)
                         girdiler_son.pop(indx+1)
                 elif i == "log":
                     if girdiler_son[indx+1] in fonksiyonlar:
                         pass
+                    elif not girdiler_son[indx+1] in (numbers or fonksiyonlar):
+                        raise SyntaxError
                     else:
                         girdiler_son[indx] = math.log10(girdiler_son[indx+1])
                         girdiler_son.pop(indx+1)
             except TypeError:
                 print(Fore.RED + "Fonksiyondan Sonra Operatör Kullanılamaz!")
                 return "error"
-
+            except SyntaxError:
+                print(Fore.RED + "Fonksiyonlar Arasında Operatör Kullanmalı veya Fonksiyona Değer Vermelisiniz!")
+                return "error"
             a += 1
+
+
     for i in girdiler_son:
         try:
             indx = girdiler_son.index(i)
