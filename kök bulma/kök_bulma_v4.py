@@ -4,7 +4,7 @@ init(autoreset=True)
 
 def girdi_al(girdi):
 
-    numbers = ("0","1","2","3","4","5","6","7","8","9")
+    numbers = ("0","1","2","3","4","5","6","7","8","9",".")
     operators = ("+","-","x","^")
 
 
@@ -144,7 +144,7 @@ print(Fore.LIGHTRED_EX+"""
 ----------------------------------------------------
 
 
-   İKİNCİ DERECEDEN BİR DENKLEMİN KÖKLERİNİ BULMA
+   İKİNCİ DERECEDEN BİR POLİNOMUN KÖKLERİNİ BULMA
 
 
 ----------------------------------------------------
