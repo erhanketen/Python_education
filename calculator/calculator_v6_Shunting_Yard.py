@@ -20,7 +20,10 @@ def girdi_al(girdi):   # Bu fonksiyon girdi alır, listeler ve integer'a çeviri
     for i in girdi:
         if func in fonksiyonlar:
             if func == "ANS":
-                girdiler.append(ANS)
+                try:
+                    girdiler.append(ANS)
+                except NameError:
+                    return "IndexError"
             else:
                 girdiler.append(func)
             func = ""
@@ -53,7 +56,6 @@ def girdi_al(girdi):   # Bu fonksiyon girdi alır, listeler ve integer'a çeviri
             return "SyntaxError"
 
 
-
     for i in girdiler:
         if (i not in fonksiyonlar) and (i not in operators) and (type(i) != int and type(i) != float):
             return "SyntaxError"
@@ -63,7 +65,7 @@ def girdi_al(girdi):   # Bu fonksiyon girdi alır, listeler ve integer'a çeviri
 
     if not girdiler:
         return "NoProcessError"
-    print(girdiler)
+
     return girdiler
 
 def tokenleme(girdiler):   #Bu Fonksiyon işlemi Postfix'e dönüştürür. (Shunting Yard Algoritması)
@@ -73,17 +75,17 @@ def tokenleme(girdiler):   #Bu Fonksiyon işlemi Postfix'e dönüştürür. (Shu
     cıktı = []
 
     for i in girdiler:
+
         if type(i) == int or type(i) == float:
             cıktı.append(i)
-
-        elif i in fonksiyonlar:
-            yigin.append(i)
 
         elif i in oncelik:
 
             while (yigin and yigin[-1] in oncelik and oncelik[yigin[-1]] >= oncelik[i]) or (yigin and yigin[-1] in fonksiyonlar):
                 cıktı.append(yigin.pop())
+            yigin.append(i)
 
+        elif i in fonksiyonlar:
             yigin.append(i)
 
         elif i == "(":
@@ -93,13 +95,13 @@ def tokenleme(girdiler):   #Bu Fonksiyon işlemi Postfix'e dönüştürür. (Shu
             if "(" not in yigin:
                 return "SyntaxError"
 
-            while yigin[-1] != "(":
+            while (yigin[-1] != "("):
                 cıktı.append(yigin.pop())
             yigin.pop()
 
     while yigin:
         cıktı.append(yigin.pop())
-    print(cıktı)
+
     return cıktı
 
 # [12, 6, '-', 4, '*', 5, 10, '/', '+']
@@ -111,7 +113,6 @@ def calculate(cikti):
     operators = ("*","/","+","-")
 
     for i in cikti:
-        print(i)
         if type(i) == int or type(i) == float:
             yigin.append(i)
 
@@ -155,8 +156,11 @@ def calculate(cikti):
                     yigin.append(factorial(a))
                 elif i == fonksiyonlar[4]:
                     a = yigin.pop()
-                    a = radians(a)
-                    yigin.append(cos(a))
+                    if a == 90:
+                        yigin.append(0)
+                    else:
+                        a = radians(a)
+                        yigin.append(cos(a))
                 elif i == fonksiyonlar[5]:
                     a = yigin.pop()
                     a = radians(a)
@@ -167,15 +171,12 @@ def calculate(cikti):
                     yigin.append(tan(a))
                 elif i == fonksiyonlar[7]:
                     a = yigin.pop()
-                    a = radians(a)
                     yigin.append(atan(a))
                 elif i == fonksiyonlar[8]:
                     a = yigin.pop()
-                    a = radians(a)
                     yigin.append(acos(a))
                 elif i == fonksiyonlar[9]:
                     a = yigin.pop()
-                    a = radians(a)
                     yigin.append(asin(a))
             except IndexError:
                 return "IndexError"
@@ -208,9 +209,8 @@ FONKSİYONLAR:
 # ANS --> en son sonuç
 """)
 
-ANS = 0
+
 while True:
-    print(ANS)
     girdi = input(Fore.LIGHTWHITE_EX+"İşlemleri Giriniz (çıkış 'exit'):")
     if girdi == "exit":
         print(Fore.LIGHTWHITE_EX+"Kapatılıyor...")
@@ -222,6 +222,9 @@ while True:
         continue
     elif girdiler == "SyntaxError":
         print(Fore.RED+"Geçersiz Bir Girdi Girdiniz!")
+        continue
+    elif girdiler == "IndexError":
+        print(Fore.RED+"ANS Mevcut Değil!")
         continue
     cikti = tokenleme(girdiler)
     if cikti == "SyntaxError":
@@ -237,19 +240,36 @@ while True:
         print(Fore.RED+"Yanlış Operatör Kullanımı!")
         continue
     sonuc = calculate(cikti)
-    ANS = sonuc
     if sonuc == "SyntaxError":
         print(Fore.RED+"Geçersiz Bir Girdi Girdiniz!")
         continue
-    try:
-       sonuc = int(sonuc)
-    except ValueError:
-        pass
+    elif sonuc == "ValueError":
+        print(Fore.RED + "Bu Fonksiyona Sadece Tam Sayi Değerler Verilebilir!")
+        continue
+    elif sonuc == "IndexError":
+        print(Fore.RED + ("Geçersiz Fonksiyon Kullanımı!"))
+        continue
+    elif sonuc == "OperatorError":
+        print(Fore.RED+"Geçersiz Operatör Kullanımı!")
+        continue
+    ANS = sonuc
     print(Fore.LIGHTWHITE_EX+"Hesaplanıyor...")
     sleep(1)
     print(Fore.GREEN+"{} = {}".format(girdi, sonuc))
 
 
-
+"""
+-----------------------------------------------------------------------------
+ÖNEMLİ PROBLEMLER:
+1- Negatif değerli sayılar kullanılırsa hata döner.  :C
+2- İç içe fonksiyonlarda yanlış değer döner.  :C
+-----------------------------------------------------------------------------
+DEĞERLİ GELİŞMELER:
+1- Algoritma Daha Basit ve Güvenilir Çalışıyor.  :D
+2- Fonksiyonlar Daha Efektif Kullanılabiliyor.  :D
+3- İşlem Önceliği ve Parantez Kavramı Mevcut.  :D
+4- Hata Yakalamalar ve Döngüler Sayesinde Program Kesilmeden Çalışabiliyor.  :D
+-----------------------------------------------------------------------------
+"""
 
 
