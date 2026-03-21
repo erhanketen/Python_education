@@ -1,4 +1,4 @@
-from math import log , pow , sqrt , factorial , cos , sin, tan, atan, acos, asin  , radians
+from math import log , pow , sqrt , factorial , cos , sin, tan, atan, acos, asin  , radians , degrees
 from time import sleep
 from colorama import Fore , init
 init(autoreset=True)
@@ -10,7 +10,7 @@ fonksiyonlar = ("log","pow","sqrt","factorial","cos","sin","tan","atan","acos","
 
 def girdi_al(girdi):   # Bu fonksiyon girdi alır, listeler ve integer'a çevirir.
     numbers = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".")
-    operators = ("*", "/", "+", "-","(",")",",")
+    operators = ("*", "/", "+", "-","(",")",","," ")
 
     girdiler = list()
     num = ""
@@ -32,6 +32,8 @@ def girdi_al(girdi):   # Bu fonksiyon girdi alır, listeler ve integer'a çeviri
         elif i in operators:
             if num == "":
                 girdiler.append(i)
+            elif i == " ":
+                pass
             else:
                 try:
                     girdiler.append(float(num))
@@ -42,11 +44,9 @@ def girdi_al(girdi):   # Bu fonksiyon girdi alır, listeler ve integer'a çeviri
                     if i != ",":
                         girdiler.append(i)
 
-
         elif i not in numbers or i not in operators:
             func += i
-        elif i == " ":
-            pass
+
 
 
     if num != "":
@@ -156,7 +156,7 @@ def calculate(cikti):
                     yigin.append(factorial(a))
                 elif i == fonksiyonlar[4]:
                     a = yigin.pop()
-                    if a == 90:
+                    if a == 90 or 270:
                         yigin.append(0)
                     else:
                         a = radians(a)
@@ -171,13 +171,13 @@ def calculate(cikti):
                     yigin.append(tan(a))
                 elif i == fonksiyonlar[7]:
                     a = yigin.pop()
-                    yigin.append(atan(a))
+                    yigin.append(degrees(atan(a)))
                 elif i == fonksiyonlar[8]:
                     a = yigin.pop()
-                    yigin.append(acos(a))
+                    yigin.append(degrees(acos(a)))
                 elif i == fonksiyonlar[9]:
                     a = yigin.pop()
-                    yigin.append(asin(a))
+                    yigin.append(degrees(asin(a)))
             except IndexError:
                 return "IndexError"
     if len(yigin) != 1:
