@@ -25,6 +25,7 @@ while True:
     if islem == "exit":
         print(Fore.LIGHTWHITE_EX+"Kapatılıyor...")
         sleep(1)
+        giris.baglanti_kes()
         break
     elif islem == "1": #GİRİŞ YAP (kullanici_adi,sifre)
         kullanici_adi = input(Fore.LIGHTWHITE_EX+"Kullanıcı Adınız:")

@@ -3,6 +3,13 @@ from time import sleep
 from colorama import Fore , init
 init(autoreset=True)
 
+"""
+GELİŞTİRME NOTLARI:
+1-) Decorator Fonk ile bir log kaydı alınabilir
+ve bu log kayıtları ayrı bir tabloda DB'de tutu-
+labilir.
+"""
+
 class Kullanici:
     def __init__(self,isim,soyisim,kullanici_adi,eposta,tel_no,sifre):
         self.isim = isim
