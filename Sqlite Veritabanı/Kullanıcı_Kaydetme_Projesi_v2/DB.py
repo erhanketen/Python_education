@@ -1,5 +1,5 @@
 import sqlite3
-
+import funcs_for_main
 
 class User:
     def __init__(self,
@@ -21,9 +21,9 @@ class User:
         return "user_id:{}\nemail:{}\npassword:{}".format(self.user_id,self.email,self.password)
 
     def show_user_info(self,user_info: tuple):
-        name = user_info[0]
-        age = user_info[1]
-        email = user_info[2]
+        name = user_info[0][0]
+        age = user_info[0][1]
+        email = user_info[0][2]
 
         return """
 KULLANICI BİLGİSİ:
@@ -45,7 +45,7 @@ E-mail: {}
         SELECT email FROM users WHERE email = ? 
         """,(self.email,))
 
-        email = self.cursor.fetchone()
+        email = self.cursor.fetchall()
 
         if email and self.email == email[0] :
             return "UsedEmailError"
@@ -63,14 +63,14 @@ E-mail: {}
         SELECT * FROM users WHERE email = ? and password = ? 
         """,(self.email,self.password))
 
-        user_info = self.cursor.fetchone()
+        user_info = self.cursor.fetchall()
 
         if not user_info:
             return "UnSuccessfulLoginError"
         else:
             self.cursor.execute("""
             UPDATE users SET state = "LoggedIn" WHERE user_id = ?
-            """,(user_info[3],))
+            """,(user_info[0][3],))
             self.con.commit()
         return user_info
 
@@ -86,19 +86,19 @@ E-mail: {}
         self.name = new_user_info[0]
         self.age = new_user_info[1]
         self.email = new_user_info[2]
-        self.password = new_user_info[5]
+        self.password = new_user_info[3]
 
         self.cursor.execute("""
         UPDATE users SET name = ? , age = ? , email = ? , password = ? WHERE user_id = ?
         """,(self.name,self.age,self.email,self.password,self.user_id))
-
+        self.con.commit()
 
     def pull_user_info(self,user_id):
         self.cursor.execute("""
         SELECT * FROM users WHERE user_id = ?
         """,(user_id,))
 
-        user_info = self.cursor.fetchone()
+        user_info = self.cursor.fetchall()
         return user_info
 
     def is_user_id_unique(self,user_id):
@@ -106,7 +106,7 @@ E-mail: {}
         SELECT user_id FROM users WHERE user_id = ?
         """,(user_id,))
 
-        user_unique_id = self.cursor.fetchone()
+        user_unique_id = self.cursor.fetchall()
 
         if not user_unique_id:
             return True
@@ -118,9 +118,9 @@ E-mail: {}
         SELECT state FROM users WHERE user_id = ?
         """,(self.user_id,))
 
-        state = self.cursor.fetchone()
+        state = self.cursor.fetchall()
 
-        if state[0] == "NotLoggedIn":
+        if state and state[0][0] == "NotLoggedIn":
             return False
         else:
             return True

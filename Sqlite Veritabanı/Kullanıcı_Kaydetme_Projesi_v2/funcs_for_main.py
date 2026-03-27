@@ -5,7 +5,6 @@ from time import sleep
 from colorama import Fore , init
 init(autoreset=True)
 
-current_user_id = str()
 
 def connector(func):
     def wrapper(obj,*args,**kwargs):
@@ -29,14 +28,14 @@ def register():
     user_id = generate_user_id(identification)
     del identification
 
-    name = input(Fore.LIGHTWHITE_EX + "Name:")
+    name = input( "Name:")
     try:
-        age = int(input(Fore.LIGHTWHITE_EX + "Age:"))
+        age = int(input( "Age:"))
     except ValueError:
         print(Fore.RED+"Invalid Age")
         return False
-    email = input(Fore.LIGHTWHITE_EX + "Email:")
-    password = input(Fore.LIGHTWHITE_EX + "Password:")
+    email = input("Email:")
+    password = input("Password:")
 
     new_user = DB.User(name=name, age=age, user_id=user_id, email=email, password=password)
 
@@ -46,7 +45,7 @@ def register():
         return False
     else:
         sleep(1.5)
-        print(Fore.LIGHTWHITE_EX + "Registration Complete")
+        print(Fore.LIGHTGREEN_EX + "Registration Complete")
         return conn
 
 @connector
@@ -76,7 +75,7 @@ def login():
         return False
     else:
         sleep(1.5)
-        print(Fore.LIGHTWHITE_EX + "Login Successful")
+        print(Fore.LIGHTGREEN_EX + "Login Successful")
         return conn
 
 @connector
@@ -85,7 +84,6 @@ def logging_connection(_user_):
     if user_info == "UnSuccessfulLoginError":
         print(Fore.RED+"Email or Password is Incorrect")
         return False
-    print(user_info)
     return user_info
 
 @connector
@@ -99,6 +97,8 @@ def logout_connection(user_obj):
         sleep(1.5)
         user_obj.logout_user()
 
+current_user_id = list()
+
 def user_page(user_info):
     print(Fore.LIGHTWHITE_EX+"""
 -------------------------------
@@ -109,8 +109,8 @@ def user_page(user_info):
     """)
 
     global current_user_id
-    current_user_id = user_info[3]
-    user = DB.User(user_id=current_user_id)
+    current_user_id.append(user_info[0][3])
+    user = DB.User(user_id=current_user_id[0])
 
     while True:
         print(Fore.LIGHTWHITE_EX+"""
@@ -123,7 +123,7 @@ Funtions:
         user_input = input("Choose an option:")
 
         if user_input == "1":
-            print(user.show_user_info(user_info))
+            print(Fore.LIGHTBLUE_EX+user.show_user_info(user_info))
         elif user_input == "2":
             name = input("Name:")
             while True:
@@ -143,10 +143,9 @@ Funtions:
 
             new_user_info = (name, age, email, password)
 
-            update_connection(new_user_info)
+            update_connection(user,new_user_info)
 
         elif user_input == "3":
-            logout_connection(user)
             return user
         else:
             print(Fore.RED+"Invalid Input")

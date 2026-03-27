@@ -1,5 +1,5 @@
 import funcs_for_main
-from funcs_for_main import current_user_id
+from funcs_for_main import current_user_id, logout_connection
 
 print(funcs_for_main.Fore.LIGHTWHITE_EX+"""
 -----------------------------------------
@@ -28,13 +28,17 @@ Functions:
         try:
             while True:
                 login = funcs_for_main.login()
-                user = funcs_for_main.user_page(login)
+                if not login:
+                    break
+                funcs_for_main.user_page(login)
                 break
         except:
             print(funcs_for_main.Fore.RED + "Something went wrong")
             break
         finally:
-            funcs_for_main.logout_connection(user)
+            if current_user_id:
+                user = funcs_for_main.DB.User(user_id=current_user_id.pop())
+                logout_connection(user)
     elif user_input == "3":
         print(funcs_for_main.Fore.LIGHTWHITE_EX+"Program shutting down")
         funcs_for_main.sleep(1.5)
