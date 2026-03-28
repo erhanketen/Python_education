@@ -11,13 +11,13 @@ print(funcs_for_main.Fore.LIGHTWHITE_EX+"""
 
 while True:
     print(funcs_for_main.Fore.LIGHTWHITE_EX+"""    
-Functions:
+Actions:
 
 1- Register
 2- Login
 3- Quit Program
     """)
-    user_input = input("Chose an option:")
+    user_input = input("Chose an action:")
     if user_input == "1":
         try:
             register = funcs_for_main.register()
@@ -37,8 +37,9 @@ Functions:
             break
         finally:
             if current_user_id:
-                user = funcs_for_main.DB.User(user_id=current_user_id.pop())
-                logout_connection(user)
+                current_user_id = current_user_id.pop()
+                user = funcs_for_main.DB.User(user_id=current_user_id)
+                logout_connection(user,current_user_id)
     elif user_input == "3":
         print(funcs_for_main.Fore.LIGHTWHITE_EX+"Program shutting down")
         funcs_for_main.sleep(1.5)

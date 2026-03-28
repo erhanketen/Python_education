@@ -1,5 +1,4 @@
 import sqlite3
-import funcs_for_main
 
 class User:
     def __init__(self,
@@ -20,16 +19,22 @@ class User:
     def __str__(self):
         return "user_id:{}\nemail:{}\npassword:{}".format(self.user_id,self.email,self.password)
 
-    def show_user_info(self,user_info: tuple):
+    def show_user_info(self):
+        self.cursor.execute("""
+        SELECT * FROM users WHERE user_id = ?
+        """,(self.user_id,))
+
+        user_info = self.cursor.fetchall()
+
         name = user_info[0][0]
         age = user_info[0][1]
         email = user_info[0][2]
 
         return """
-KULLANICI BİLGİSİ:
+USER INFORMATION:
         
-İsim: {}
-Yaş: {}
+Name: {}
+Age: {}
 E-mail: {}
         """.format(name,age,email)
 
@@ -47,13 +52,13 @@ E-mail: {}
 
         email = self.cursor.fetchall()
 
-        if email and self.email == email[0] :
+        if email:
             return "UsedEmailError"
-        elif email and (not invalid_email(email[0])):
+        elif not invalid_email(self.email):
             return "InvalidEmailError"
         else:
             self.cursor.execute("""
-            INSERT INTO users VALUES (?,?,?,?,?,?)
+            INSERT INTO users VALUES (?,?,?,?,?,?,datetime('now','localtime'))
             """,(self.name,self.age,self.email,self.user_id,self.state,self.password))
             self.con.commit()
             return True
@@ -101,6 +106,18 @@ E-mail: {}
         user_info = self.cursor.fetchall()
         return user_info
 
+    def is_log_id_unique(self,log_id):
+        self.cursor.execute("""
+        SELECT log_id FROM logs WHERE log_id = ?
+        """,(log_id,))
+
+        log_unique_id = self.cursor.fetchall()
+
+        if not log_unique_id:
+            return True
+        else:
+            return False
+
     def is_user_id_unique(self,user_id):
         self.cursor.execute("""
         SELECT user_id FROM users WHERE user_id = ?
@@ -124,6 +141,23 @@ E-mail: {}
             return False
         else:
             return True
+
+    def insert_log(self,log_info: tuple):
+        log_id = log_info[0]
+        user_id = log_info[1]
+        action = log_info[2]
+
+        self.cursor.execute("""
+        INSERT INTO logs VALUES (?,?,?,datetime('now','localtime'))
+        """,(log_id,user_id,action))
+        self.con.commit()
+
+    def delete_user(self):
+        self.cursor.execute("""
+        DELETE FROM users WHERE user_id = ?
+        """,(self.user_id,))
+
+        self.con.commit()
 
 def invalid_email(email: str):
     valid = {"gmail.com","hotmail.com"}
